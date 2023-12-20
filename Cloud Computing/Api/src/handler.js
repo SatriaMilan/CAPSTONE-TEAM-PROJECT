@@ -242,6 +242,7 @@ const completedStatus = async (request, h) => {
 }
 
 module.exports = {
+    postPhoto,
     addingOrder,
     gettingAllOrders,
     gettingOrderByEmail,
