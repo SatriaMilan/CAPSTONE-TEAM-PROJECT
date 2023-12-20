@@ -58,6 +58,11 @@ const addingOrder = async (request, h) => {
             default:
                 price = 0;
                 break;
+        },
+
+        var imgUrl = '';
+        if (request.file && request.file.cloudStoragePublicUrl) {
+            imgUrl = request.file.cloudStoragePublicUrl;
         }
 
         var imgUrl = '';
