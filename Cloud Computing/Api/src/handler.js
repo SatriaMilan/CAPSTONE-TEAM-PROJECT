@@ -1,11 +1,36 @@
+require('dotenv').config();
+
 const mysql = require('mysql');
+const imgUploader = require('../modules/imgUploader.js');
 
 const connection = mysql.createConnection({
-    host: '',
-    user: 'root',
-    database: 'junkcash',
-    password: ''
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    database: process.env.DB_DATABASE,
+    password: process.env.DB_PASSWORD,
+    waitForConnections: true,
+
 });
+
+const postPhoto = async (request, h) => {
+    try {
+        const { payload } = request;
+        const file = payload['image'];
+    
+        // Upload to GCS
+        const cloudStoragePublicUrl = await imgUploader.uploadPhotos(file);
+    
+        const data = {
+          imageUrl: cloudStoragePublicUrl,
+        };
+    
+        return h.response(data).code(200).header('Content-Type', 'application/json'); // Update Content-Type
+    
+      } catch (error) {
+        console.error("Error uploading image:", error);
+        return h.response({ message: 'Error uploading image' }).code(500);
+      }
+  }; 
 
 const addingOrder = async (request, h) => {
     try {
